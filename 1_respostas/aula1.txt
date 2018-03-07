@@ -2,6 +2,23 @@ O que são sistemas embarcados
 R: Sistemas dedicados a determinadas tarefas. Tambem podem ser definido como sendo um computador com um proprosito geral emcapsulado
 
 O que sâo sistemas microprocessados?
-R:
+R:Sao sistemas os quais sao controlados pelos sistemas embarcados
+
+Apresente aplicações de sistemas ambarcados
+(a)Industria automotiva
+    Para os sistemas de freios, refrigeraçao, controle de combustivel do automovel
+(b)Eletrodomésticos:
+    Geladeiras, televizao, celulares, maquinas de lavar
+(c)Automação industrial:
+    Determinados padroes os quais viabilizam os fluxos de cargas e informações.
+    
+Cite arquiteturas possíveis e as diferenças entre elas
+  As arquiteturas cisc e risc, sendo que a diferença entre elas esta na forma como elas trabalham. A cisc possui uma arquitetura mais complexas, e a risc ja possui comandos mais simples.
+  
+Por que usamos o MSP430 na disciplina, ao invés e outro microcontrolador?
+  O dispositivo fornece todas as funcionalidades necessarias ao desenvolvimento da disiplina, contudo dependendo da forma como um determinado projeto for elaborado sera necessaria outra placa.
+  
+  
+    
 
 
