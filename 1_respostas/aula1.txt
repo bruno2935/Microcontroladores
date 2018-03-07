@@ -1,0 +1,7 @@
+O que são sistemas embarcados
+R: Sistemas dedicados a determinadas tarefas. Tambem podem ser definido como sendo um computador com um proprosito geral emcapsulado
+
+O que sâo sistemas microprocessados?
+R:
+
+
