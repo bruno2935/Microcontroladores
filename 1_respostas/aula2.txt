@@ -1,0 +1,38 @@
+1. Quais as diferenças entre os barramentos de dados e de endereços?
+	o barramento de dados é usado para transmitir informaçao entra as unidades, sendo que o barramento de dados é bi-direcional. O barramento de endereços é ultizado para 
+	informar o destino ou a origem dos dados, desta forma funcionamento em conjunto com o barramento de dados, logo a memoria de endereços indica o destino ou origem dos dados 		os quais serão transmitidos pelos barramentos de dados.
+
+2. Quais são as diferenças entre as memórias RAM e ROM?
+	A memoria ROM é uma memoria nao volatil, ou seja quando a energia é retirada a informação é mantida.  A memoria RAM é uma memoria volatil, ou seja é uma memoria ultilizada
+	quando o computador ja esta em funcionamento. A memoria RAM tambem é conhecida como randam access memory, ou seja  esta memoria pode ser acesada pelo sistema operacional
+	em qualquer momento.
+
+3. Considere o código abaixo:
+
+#include <stdio.h>
+int main(void)
+{
+	int i;
+	printf("Insira um número inteiro: ");
+	scanf("%d", &i);
+	if(i%2)
+		printf("%d eh impar.\n");
+	else
+		printf("%d eh par.\n");
+	return 0;
+}
+
+4. Para este código, responda:
+(a) A variável i é armazenada na memória RAM ou ROM? Por quê? 
+		
+(b) O programa compilado a partir deste código é armazenado na memória RAM ou ROM? Por quê?
+
+
+5. Quais são as diferenças, vantagens e desvantagens das arquiteturas Harvard e Von Neumann?
+
+	Von neumann agrupa as memórias de progamas e de dados em uma só. é aplicado em situaçoes de baixo consumo energetico.
+	
+
+6. Considere a variável inteira i, armazenando o valor 0x8051ABCD. Se i é armazenada na memória a partir do endereço 0x0200, como ficam este byte e os seguintes, considerando que a memória é: (a) Little-endian; (b) Big-endian.
+
+7. Sabendo que o processador do MSP430 tem registradores de 16 bits, como ele soma duas variáveis de 32 bits?
