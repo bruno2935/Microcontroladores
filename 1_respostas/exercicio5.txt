@@ -28,23 +28,59 @@ Escreva os trechos de código assembly do MSP430 para:
 
 if(i>j) f = g+h+10;
 else f = g-h-10;
-    cmp R7,R8
-    jeq COND2;
-    
-    
-
-
-
+     
+     cmp R7,R8
+     jge LACO1
+     add.w #A,R6
+     Add.w R6,R5
+     mov.w R5,R4
+     jmp EXIT
+     LACO1:
+     add.w #A,R6
+     sub.w R6,R5
+     mov.w R5,R4
+     EXIT:
+     
 "Traduza" o seguinte trecho de código em C para o assembly do MSP430:
 while(save[i]!=k) i++;
-    
-
-
-
-
-
+     
+     LACO1:
+     rla.w R7
+     add.w R10,R7
+     cmp 0(R7),R11
+     jeq EXIT
+     inc.w R7
+     jmp LACO1
+     EXIT:
+     
 "Traduza" o seguinte trecho de código em C para o assembly do MSP430:
 for(i=0; i<100; i++) A[i] = i*2;
+    
+    mov #0,R7
+    LACO1:
+    cmp #100,R7
+    jge EXIT
+    rla.w R7
+    move.w R7,R8
+    add.w R10,R8
+    move.w R7,0(R8)
+    inc R7
+    jmp LACO1:    
+    EXIT: 
 
 "Traduza" o seguinte trecho de código em C para o assembly do MSP430:
 for(i=99; i>=0; i--) A[i] = i*2;
+
+    mov #63,R7
+    LACO1:
+    cmp #0,R7
+    jl EXIT
+    rla.w R7
+    move.w R7,R8
+    add.w R10,R8
+    move.w R7,0(R8)
+    dec R7
+    jmp LACO1:    
+    EXIT: 
+
+
