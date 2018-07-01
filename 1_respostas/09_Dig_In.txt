@@ -1,0 +1,90 @@
+1.Escreva uma função em C que faz o debounce de botões ligados à porta P1.
+#include <msp430g2553.h>
+#include <legacymsp430.h>
+
+#define LED1 BIT0
+#define BTN  BIT3
+
+void atraso(volatile unsigned int i)
+{
+    while((i--)>0);
+}
+
+
+
+
+int main(void)
+{
+        WDTCTL = WDTPW | WDTHOLD;                    // desliga watchdog time
+        P1OUT &= ~LED1;                            // inicia saida 0
+        P1DIR |=  LED1;                           // declara p1.1 como saida
+        P1DIR &= ~BTN;                           // declara p1.3 como entrada
+        P1REN |= BTN;                           // habilita resistor de up-up
+        P1IES |= BTN;                          // borda de descida para interrupt
+        P1IE |= BTN;                          // Habilita interrupt para botão p1.3
+        _BIS_SR(GIE+LPM0_bits);             // Desliga o sistema, entrando assim no modo baixo-consumo
+        return 0;
+}
+
+interrupt(PORT1_VECTOR) Interrupcao_P1(void)
+{
+
+      atraso(0x7530);                           //esperando 30ms para o botão estabilizar
+      while((P1IN&BTN)==0){ P1OUT |=LED1; }   // ligando o led1 enquanto o botão ainda estiver pressionado
+      P1OUT &=~LED1;                         // desligando o led1
+      P1IFG &=~BTN;                         // limpando a flag da interrupção
+
+
+}
+
+
+2.Escreva um código em C que lê 9 botões multiplexados por 6 pinos, e pisca os LEDs da placa Launchpad de acordo com os botões. Por exemplo, se o primeiro botão é pressionado, os LEDs piscam uma vez; se o segundo botão é pressionado, os LEDs piscam duas vezes; e assim por diante. Se mais de um botão é pressionado, os LEDs não piscam.
+#include <msp430g2553.h>
+#include <legacymsp430.h>
+#include <stdint.h>
+
+
+uint32_t matriz[8] = {1, 4, 7, 2, 5, 8, 3, 6, 9};  // vetor para indicar a posiçao do numero apertado no teclado
+
+
+int main(void)
+{
+    WDTCTL=WDTPW+WDTHOLD;
+    P1DIR =0x7;               //declarando os 3 primeiros pinos como saidas
+    P2DIR =0x0;              // declarando os pinos da porta p2 como entradas
+    P1OUT=0;                //definindo estado inicial da saida
+
+
+    uint32_t colunas[3] = {3, 5, 7};    //coluna dos numeros a serem enviados ao teclados como sendo as saidas digitais da MSP
+    uint32_t linhas [3] = {3, 5, 7};   //vetor que serve para comparar a saida do teclado a qual entrada na MSP
+    uint32_t num;                     //apenas para salvar o numero apertado
+
+
+    while(1)
+    {
+        for(uint8_t i=0 ;i<3 ;i++ )              //indice que vai fazer a logica de mudar os valors de x1x2x3>> 011-101-011
+        {
+            P1OUT |=colunas[i];                //mandando os valores para as entradas x1x2x3 do teclado
+            for(uint8_t j=0 ;j<3 ;j++ )       //indice que compara a saida do teclado, a qual esta conectada na porta P2IN
+            {
+
+                if(P2IN & linhas[j])        //quando o numero do vetor linha for igual ao numero presente na entrada entradamos no if para assim verificar onde o numero esta na matriz
+                {                          //fazemos uma logica para saber onde o numero esta
+                  num=matriz[i*3+j];      //como na matriz esta definido os valores, se sabemos que i indica a linha, e j a coluna
+                                         // basta fazermos i*3+j, pois se i*1 indica que no vetor matriz iremos começar no indice 0, e em seguida de acordo com j verificaremos qual o numero
+                }                       //exemplo: Se i=0, quer dizer que estamos enviado o numero 011 para o teclado, logo iremos comparar a saida do mesmo para saber qual o numero
+                                       //no segundo for, iremos ficar comparando a entrada com os possiveis valores dela, 3 5 ou 7
+            }                         // Se, por exemplo em j=1 for igual, ou seja a sada do teclado veio 5
+                                     //logo, para localizarmos o  numero na matriz faremos
+                                    //i*3+j=1*3+1=5, logo esta posiçao na matriz corresponde ao digito 5 por conheciddencia o indice correpondeu a posiçao.
+
+        }
+
+
+
+
+    }
+
+
+
+}

@@ -1,0 +1,165 @@
+Para todas as questões, utilize os LEDs e/ou os botões da placa Launchpad do MSP430.
+
+1.Escreva um código em C que pisca os LEDs ininterruptamente.
+
+#include <msp430g2553.h>
+#define LED1 BIT0
+
+void atraso(volatile unsigned int i)
+{
+    while((i--)>0);
+}
+
+int main(void)
+{
+    WDTCTL = WDTPW | WDTHOLD;    // stop watchdog timer
+    P1DIR |=  LED1;              //definindo como saida o led1
+    P1OUT |=  LED1;              //definindo como zero o estado inicial da saida
+
+    while(1)
+    {
+        P1OUT ^= LED1;    //na xor quando colocamos 1, o bit é invertido na saida
+        atraso(0xffff);
+    }
+
+}
+
+2.Escreva um código em C que pisca os LEDs ininterruptamente. No ciclo que pisca os LEDs, o tempo que os LEDs ficam ligados deve ser duas vezes maior do que o tempo que eles ficam desligados.
+
+#include <msp430g2553.h>
+#define LED1 BIT0
+
+
+void atraso(volatile unsigned int i)
+{
+    while((i--)>0);
+}
+
+
+
+int main(void)
+{
+
+    WDTCTL = WDTPW | WDTHOLD;
+    BCSCTL1=CALBC1_1MHZ;
+    DCOCTL =CALBC1_1MHZ;
+    P1OUT |=~(LED1);               // definindo estado da saida igual a zero inicialmente;
+    P1DIR |=LED1;               // declarou como sendo saida o pino 0
+
+    while(1)
+    {
+        P1OUT ^= LED1;    //na xor quando colocamos 1, o bit é invertido na saida
+        atraso(0xffff);
+        P1OUT &= ~LED1;    //na xor quando colocamos 1, o bit é invertido na saida
+        atraso(0x7fff);
+
+
+    }
+
+
+
+
+
+    return 0;
+}
+
+
+3.Escreva um código em C que acende os LEDs quando o botão é pressionado.
+
+#include <msp430g2553.h>
+#define LED1 BIT0
+#define BTN  BIT3
+
+
+
+
+int main(void)
+{
+    WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
+    P1REN  =  BTN;
+    P1DIR |=  LED1;              //definindo como saida o led1
+    P1DIR &= ~BTN;               //definindo como entrada btn
+    P1OUT |=  BTN;              //definindo como zero o estado inicial da saida
+
+    while(1)
+    {
+        if(P1IN & BTN){
+             P1OUT  &=~LED1;
+        }
+        else P1OUT |=LED1;
+    }
+}
+
+
+
+4.Escreva um código em C que pisca os LEDs ininterruptamente somente se o botão for pressionado.
+
+#include <msp430g2553.h>
+#define LED1 BIT0
+#define BTN  BIT3
+
+
+void atraso(volatile unsigned int i)
+{
+    while((i--)>0);
+}
+
+int main(void)
+{
+    WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
+    P1REN  =  BTN;
+    P1DIR |=  LED1;              //definindo como saida o led1
+    P1DIR &= ~BTN;               //definindo como entrada btn
+    P1OUT |=  BTN;              //definindo como zero o estado inicial da saida
+
+    while(1)
+    {
+        if(P1IN & BTN){
+             P1OUT  &=~LED1;
+        }
+        else 
+                P1OUT ^= LED1;    //na xor quando colocamos 1, o bit é invertido na saida
+                atraso(0xffff);
+
+    
+    
+    }
+}
+
+
+
+5.Escreva um código em C que acende os LEDs quando o botão é pressionado. Deixe o MSP430 em modo de baixo consumo, e habilite a interrupção do botão.
+#include <msp430g2553.h>
+#include <legacymsp430.h>
+
+#define LED1 BIT0
+#define BTN  BIT3
+
+
+
+
+
+
+int main(void)
+{
+        WDTCTL = WDTPW | WDTHOLD;                    // desliga watchdog time
+        P1OUT &= ~LED1;                            // inicia saida 0
+        P1DIR |=  LED1;                           // declara p1.1 como saida
+        P1DIR &= ~BTN;                           // declara p1.3 como entrada
+        P1REN |= BTN;                           // habilita resistor de up-up
+        P1IES |= BTN;                          // borda de descida para interrupt
+        P1IE |= BTN;                          // Habilita interrupt para botão p1.3
+        _BIS_SR(GIE+LPM0_bits);             // Desliga o sistema, entrando assim no modo baixo-consumo
+        return 0;
+}
+
+interrupt(PORT1_VECTOR) Interrupcao_P1(void)
+{
+
+      while((P1IN&BTN)==0){ P1OUT |=LED1; }   // ligando o led1 enquanto o botão ainda estiver pressionado
+      P1OUT &=~LED1;                         // desligando o led1
+      P1IFG &=~BTN;                         // limpando a flag da interrupção
+
+}
+
+
